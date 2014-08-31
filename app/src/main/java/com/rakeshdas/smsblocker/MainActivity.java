@@ -4,11 +4,10 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -17,6 +16,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
 
@@ -43,14 +43,45 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 }
+
 class SmsFilter extends BroadcastReceiver {
     private final String TAG = "SMS";
+    public final AudioManager am = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.i(TAG, "SMS Received!");
-        Toast.makeText(context, "SMS Received!", Toast.LENGTH_LONG).show();
+        if (intent != null){
+            String action = intent.getAction();
+            if (action.equals("android.provider.Telephony.SMS_RECEIVED")){
+               Bundle extras = intent.getExtras();
+                if (extras != null){
+                    am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                }
+            }
+        }
+
+
     }
 
 }
+        /*if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")){
+            Bundle extras = intent.getExtras();
+            if (extras != null){
+                Object[] pdus = (Object[])extras.get("pdus");
+                if (pdus.length<1)return; //invalid SMS
+                StringBuilder sb = new StringBuilder();
+                String sender = null;
+                for (int i = 0; i< pdus.length; i++){
+                    SmsMessage message = SmsMessage.createFromPdu((byte[])pdus[i]);
+                    if (sender == null) sender = message.getOriginatingAddress();
+                    String text = message.getMessageBody();
+                    if (text != null) sb.append(text);
+                }
+                if (sender != null){
+                    abortBroadcast();
+                }
+                return;
+            }
+        }*/
