@@ -58,6 +58,7 @@ class SmsFilter extends BroadcastReceiver {
                 if (extras != null){
                     final AudioManager am = (AudioManager)context.getSystemService(context.AUDIO_SERVICE);
                     am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    //TODO block SMS App
                 }
             }
         }
