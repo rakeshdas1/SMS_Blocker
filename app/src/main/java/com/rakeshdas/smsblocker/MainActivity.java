@@ -46,7 +46,6 @@ public class MainActivity extends Activity {
 
 class SmsFilter extends BroadcastReceiver {
     private final String TAG = "SMS";
-    public final AudioManager am = (AudioManager) getBaseContext().getSystemService(Context.AUDIO_SERVICE);
 
 
     @Override
@@ -57,7 +56,8 @@ class SmsFilter extends BroadcastReceiver {
             if (action.equals("android.provider.Telephony.SMS_RECEIVED")){
                Bundle extras = intent.getExtras();
                 if (extras != null){
-                    am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    final AudioManager am = (AudioManager)context.getSystemService(context.AUDIO_SERVICE);
+                    am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
                 }
             }
         }
